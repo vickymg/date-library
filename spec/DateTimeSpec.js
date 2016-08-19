@@ -72,4 +72,29 @@ describe("DateTime", function() {
        });
      });
    });
+
+   describe("setter", function() {
+     var settableProperties = [["seconds", "minutes", "hours", "date", "month", "year"],
+        ["seconds", "minutes", "hours12", "ampm", "ordinalDate", "monthName", "year"],
+        ["offset"]];
+     it("can reconstruct a date using the property setters", function() {
+       testDates.forEach(function(date, i) {
+         settableProperties.forEach(function(properties) {
+           var date = DateTime(new Date(0));
+           properties.forEach(function(property) {
+             date[property] = expectedValues[property][i];
+           });
+           expect(date.offset).toEqual(expectedValues.offset[i]);
+         });
+       });
+     });
+
+     it("throws an error on attempt to write to property 'day'", function() {
+       expect(function() {
+         var date = DateTime();
+         date.day = 4;
+       }).toThrow();
+     });
+
+   });
 });

@@ -7,7 +7,6 @@ var DateTime = (function() {
 
   function createDateTime(date) {
     return {
-
       get year() {
         return date.getUTCFullYear();
       },
@@ -48,6 +47,55 @@ var DateTime = (function() {
       },
       get offset() {
         return date.getTime();
+      },
+      set year(v) {
+        date.setUTCFullYear(v);
+      },
+      set month(v) {
+        date.setUTCMonth(v - 1);
+      },
+      set monthName(v) {
+        var index = monthNames.indexOf(v);
+        if (index < 0) {
+            throw new Error("'" + v + "' is not a valid month name.");
+        }
+        date.setUTCMonth(index);
+      },
+      set day(v) {
+        throw new Error("The property 'day' is readonly.");
+      },
+      set date(v) {
+        date.setUTCDate(v);
+      },
+      set ordinalDate(v) {
+        date.setUTCDate(+v.slice(0, -2));
+      },
+      set hours(v) {
+        date.setUTCHours(v);
+      },
+      set hours12(v) {
+        date.setUTCHours(v % 12);
+      },
+      set minutes(v) {
+        date.setUTCMinutes(v);
+      },
+      set seconds(v) {
+        date.setUTCSeconds(v);
+      },
+      set ampm(v) {
+        if (!/^(am|pm)$/.test(v)) {
+            throw new Error("'" + v + "' is not 'am' or 'pm'.");
+        }
+        if (v !== this.ampm) {
+            date.setUTCHours((this.hours + 12) % 24);
+        }
+      },
+      set offset(v) {
+        date.setTime(v);
+      },
+      toString: function (formatString) {
+        formatString = formatString || "YYYY-M-D H:m:s";
+        return toString(this, formatString);
       }
     };
   }
