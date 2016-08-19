@@ -95,6 +95,29 @@ describe("DateTime", function() {
          date.day = 4;
        }).toThrow();
      });
-
    });
+
+   var expectedStrings = {
+          "YYYY-M-D H:m:s": ["1-1-1 0:00:00", "21-2-3 7:06:07", "321-3-6 14:12:14", "1776-4-9 21:18:21", "1900-5-12 4:24:28", "1901-6-15 11:30:35", "1970-7-18 18:36:42", "2000-8-21 1:42:49", "2008-9-24 8:48:56", "2016-10-27 15:54:03", "2111-11-30 22:01:10", "9999-12-31 12:07:17", "275760-9-13 0:00:00", "-271821-4-20 0:00:00", "-5-10-17 4:26:40"],
+          "dddd, MMMM Do YYYY h:m:s a": ["Monday, January 1st 1 12:00:00 am", "Wednesday, February 3rd 21 7:06:07 am", "Sunday, March 6th 321 2:12:14 pm", "Tuesday, April 9th 1776 9:18:21 pm", "Saturday, May 12th 1900 4:24:28 am", "Saturday, June 15th 1901 11:30:35 am", "Saturday, July 18th 1970 6:36:42 pm", "Monday, August 21st 2000 1:42:49 am", "Wednesday, September 24th 2008 8:48:56 am", "Thursday, October 27th 2016 3:54:03 pm", "Monday, November 30th 2111 10:01:10 pm", "Friday, December 31st 9999 12:07:17 pm", "Saturday, September 13th 275760 12:00:00 am", "Tuesday, April 20th -271821 12:00:00 am", "Tuesday, October 17th -5 4:26:40 am"],
+          "YYYY.MMMM.M.dddd.D.Do.H.h.m.s.a": ["1.January.1.Monday.1.1st.0.12.00.00.am", "21.February.2.Wednesday.3.3rd.7.7.06.07.am", "321.March.3.Sunday.6.6th.14.2.12.14.pm", "1776.April.4.Tuesday.9.9th.21.9.18.21.pm", "1900.May.5.Saturday.12.12th.4.4.24.28.am", "1901.June.6.Saturday.15.15th.11.11.30.35.am", "1970.July.7.Saturday.18.18th.18.6.36.42.pm", "2000.August.8.Monday.21.21st.1.1.42.49.am", "2008.September.9.Wednesday.24.24th.8.8.48.56.am", "2016.October.10.Thursday.27.27th.15.3.54.03.pm", "2111.November.11.Monday.30.30th.22.10.01.10.pm", "9999.December.12.Friday.31.31st.12.12.07.17.pm", "275760.September.9.Saturday.13.13th.0.12.00.00.am", "-271821.April.4.Tuesday.20.20th.0.12.00.00.am", "-5.October.10.Tuesday.17.17th.4.4.26.40.am"]
+      };
+
+    describe("toString", function() {
+      it("returns expected values", function() {
+        testDates.forEach(function(date, i) {
+          for(format in expectedStrings) {
+            expect(date.toString(format)).toEqual(expectedStrings[format][i]);
+          }
+        });
+      });
+    });
+
+    it("parses a string as a date when passed in a string and a format string", function () {
+      for (format in expectedStrings) {
+          expectedStrings[format].forEach(function (date, i) {
+              expect(DateTime(date, format).offset).toEqual(testDates[i].offset);
+          });
+      }
+  });
 });
